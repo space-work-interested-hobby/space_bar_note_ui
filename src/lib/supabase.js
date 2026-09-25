@@ -62,6 +62,68 @@ export async function signInWithGoogle() {
     return data;
 }
 
+// ============================================================
+// EMAIL/PASSWORD AUTH
+// ============================================================
+
+/**
+ * Sign up with email and password
+ */
+export async function signUpWithEmail(email, password, options = {}) {
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+            ...options,
+            redirectTo: options.redirectTo || `${window.location.origin}/auth/callback`
+        }
+    });
+    
+    if (error) {
+        console.error('Sign up error:', error);
+        return { data: null, error };
+    }
+    
+    return { data, error: null };
+}
+
+/**
+ * Sign in with email and password
+ */
+export async function signInWithEmail(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+    
+    if (error) {
+        console.error('Sign in error:', error);
+        return { data: null, error };
+    }
+    
+    return { data, error: null };
+}
+
+/**
+ * Reset password for email
+ */
+export async function resetPasswordForEmail(email) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`
+    });
+    
+    if (error) {
+        console.error('Reset password error:', error);
+        return { error };
+    }
+    
+    return { error: null };
+}
+
+// ============================================================
+// SESSION MANAGEMENT
+// ============================================================
+
 /**
  * Sign out
  */

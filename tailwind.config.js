@@ -7,8 +7,8 @@ export default {
   ],
   theme: {
     extend: {
+      // Design System Colors - Atelier Spirits & Brew
       colors: {
-        // Design System Colors - Atelier Spirits & Brew
         'surface-obsidian': '#0F1115',
         'surface-slate': '#17191F',
         'surface-container': '#1d1f26',
@@ -21,13 +21,14 @@ export default {
         'surface-bright': '#373940',
         'surface-dim': '#111319',
         'surface': '#111319',
+        'surface-hover': '#22252d',
         
         'bar-mode-text': '#FFFFFF',
         'bar-mode-surface': '#12141A',
         'bar-mode-canvas': '#050608',
         
         'cream-text': '#F8F5EE',
-        'cream-muted': '#C5C0B0',
+        'cream-muted': '#C5C0B3',
         
         'primary': '#ffbb60',
         'primary-container': '#e59e38',
@@ -78,6 +79,8 @@ export default {
         'on-surface-variant': '#d6c3b0',
         'surface-tint': '#ffb95b',
       },
+
+      // Font Families
       fontFamily: {
         'headline-display': ['Newsreader', 'serif'],
         'headline-lg': ['Newsreader', 'serif'],
@@ -95,6 +98,8 @@ export default {
         'label-sm': ['Plus Jakarta Sans', 'sans-serif'],
         'sans': ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       },
+
+      // Font Sizes
       fontSize: {
         'bar-mode-step-mobile': ['22px', { lineHeight: '30px', fontWeight: '700' }],
         'headline-lg-mobile': ['28px', { lineHeight: '36px', fontWeight: '500' }],
@@ -111,6 +116,8 @@ export default {
         'headline-lg': ['36px', { lineHeight: '44px', fontWeight: '500' }],
         'bar-mode-metric-mobile': ['32px', { lineHeight: '36px', fontWeight: '800' }],
       },
+
+      // Spacing System
       spacing: {
         'space-xs': '0.25rem',
         'space-sm': '0.5rem',
@@ -123,18 +130,27 @@ export default {
         'gutter': '1.5rem',
         'gutter-mobile': '1rem',
       },
+
+      // Border Radius
       borderRadius: {
         'DEFAULT': '0.25rem',
         'lg': '0.5rem',
         'xl': '0.75rem',
         'full': '9999px',
       },
+
+      // Backdrop Blur
       backdropBlur: {
         'xs': '2px',
       },
+
+      // Box Shadows
       boxShadow: {
         'glow': '0 0 28px rgba(245, 179, 66, 0.35)',
         'glow-sm': '0 0 16px rgba(245, 179, 66, 0.6)',
+        'card': '0 4px 20px rgba(0, 0, 0, 0.3)',
+        'card-hover': '0 8px 32px rgba(0, 0, 0, 0.4)',
+        'inner-glow': 'inset 0 0 20px rgba(245, 179, 66, 0.1)',
       },
     },
   },
