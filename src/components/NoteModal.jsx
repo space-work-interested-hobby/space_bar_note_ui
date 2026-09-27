@@ -1,40 +1,51 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useI18n } from '../i18n';
 import { Upload, X, Image as ImageIcon, Link as LinkIcon, Plus } from 'lucide-react';
 
 const CATEGORIES = ['cocktail', 'mocktail', 'coffee', 'tea', 'juice', 'beer', 'wine', 'dessert', 'other'];
 const DIFFICULTIES = ['de', 'trung_binh', 'kho'];
 
-export default function NoteModal({ isOpen, onClose, onSave, note, title }) {
-  const { t } = useI18n();
-  const fileInputRef = useRef(null);
-  
+// Helper function to convert note to form data
+const noteToFormData = (note) => {
   // Convert ingredients to string format for form (handle both string and object formats)
-  const initialIngredients = note?.ingredients?.map(ing => 
+  const ingredients = note?.ingredients?.map(ing =>
     typeof ing === 'string' ? ing : (ing.name || '')
   ) || [''];
-  
+
   // Convert images to form format
-  const initialImages = note?.images?.map(img => ({
+  const images = note?.images?.map(img => ({
     id: img.id || Date.now() + Math.random(),
     url: img.url || img,
     name: img.name || 'Image',
     caption: img.caption || '',
     alt: img.alt || '',
   })) || [];
-  
-  const [formData, setFormData] = useState({
+
+  return {
     title: note?.title || '',
     description: note?.description || '',
     category: note?.category || 'cocktail',
     difficulty: note?.difficulty || 'de',
     time_minutes: note?.time_minutes || '',
     servings: note?.servings || 1,
-    ingredients: initialIngredients,
+    ingredients: ingredients,
     steps: note?.steps || [''],
-    images: initialImages,
-    heroImageId: note?.heroImageId || initialImages[0]?.id || null,
-  });
+    images: images,
+    heroImageId: note?.heroImageId || images[0]?.id || null,
+  };
+};
+
+export default function NoteModal({ isOpen, onClose, onSave, note, title }) {
+  const { t } = useI18n();
+  const fileInputRef = useRef(null);
+
+  const [formData, setFormData] = useState(() => noteToFormData(note));
+
+  // Update form when note prop changes (for editing different notes)
+  useEffect(() => {
+    console.log('[NoteModal] note prop changed:', note?.id, 'title:', note?.title);
+    setFormData(noteToFormData(note));
+  }, [note]);
 
   if (!isOpen) return null;
 

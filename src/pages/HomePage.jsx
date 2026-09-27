@@ -56,7 +56,15 @@ export default function HomePage() {
 
   const handleDeleteNote = async (id) => {
     if (confirm(t('messages.confirmDelete'))) {
-      await deleteNote(id);
+      try {
+        await deleteNote(id);
+        // Show success message
+        const msg = t('messages.deleted');
+        console.log(msg);
+      } catch (err) {
+        console.error('Error deleting note:', err);
+        alert('Không thể xóa công thức. Bạn cần đăng nhập hoặc không có quyền xóa công thức này.');
+      }
     }
   };
 

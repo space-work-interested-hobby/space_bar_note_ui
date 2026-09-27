@@ -226,8 +226,8 @@ export default function NoteCard({ note, onEdit, onDelete }) {
           </>
         )}
         
-        {/* Gradient Overlay (always on top of image) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-slate via-surface-slate/40 to-transparent"></div>
+        {/* Gradient Overlay (always on top of image, but doesn't block clicks) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-surface-slate via-surface-slate/40 to-transparent pointer-events-none"></div>
         
         {/* Category Badge */}
         <div className="absolute top-3 left-3 bg-surface-obsidian/80 backdrop-blur-md px-3 py-1.5 rounded-lg">
@@ -309,8 +309,8 @@ export default function NoteCard({ note, onEdit, onDelete }) {
           </div>
         </div>
         
-        {/* Author & Actions */}
-        <div className="flex items-center justify-between pt-3 bg-surface-container-low px-3 py-2 rounded-lg -mx-space-lg mb-space-sm">
+        {/* Author & Actions - Fixed layout without negative margin */}
+        <div className="flex items-center justify-between pt-3 px-1">
           {note.author_name ? (
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-surface-smoke flex items-center justify-center">
@@ -327,24 +327,26 @@ export default function NoteCard({ note, onEdit, onDelete }) {
             </div>
           )}
           
-          {/* Action Buttons */}
-          <div className="flex items-center gap-1">
+          {/* Action Buttons - Always on top and clickable */}
+          <div className="flex items-center gap-1 relative z-10">
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 onEdit?.(note);
               }}
-              className="p-2 text-cream-muted hover:text-primary rounded-lg hover:bg-surface-smoke transition-colors"
+              className="p-2 text-cream-muted hover:text-primary rounded-lg hover:bg-surface-smoke transition-colors cursor-pointer active:bg-primary/20"
               title={editLabel}
             >
               <span className="material-symbols-outlined text-lg">edit</span>
             </button>
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 onDelete?.(note.id);
               }}
-              className="p-2 text-cream-muted hover:text-error rounded-lg hover:bg-error-container/20 transition-colors"
+              className="p-2 text-cream-muted hover:text-error rounded-lg hover:bg-error-container/20 transition-colors cursor-pointer active:bg-error/20"
               title={deleteLabel}
             >
               <span className="material-symbols-outlined text-lg">delete</span>

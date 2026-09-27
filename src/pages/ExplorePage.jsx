@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useNotes } from '../hooks/useNotes';
 import { useI18n } from '../i18n';
 import NoteCard from '../components/NoteCard';
+import NoteModal from '../components/NoteModal';
 
 const CATEGORY_ICONS = {
   all: '✨',
@@ -143,7 +144,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
 export default function ExplorePage() {
   const { t } = useI18n();
   const navigate = useNavigate();
-  const { notes, loading } = useNotes();
+  const { notes, loading, addNote, updateNote, deleteNote } = useNotes();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -151,10 +152,50 @@ export default function ExplorePage() {
   const [viewMode, setViewMode] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState(null);
 
   // Reset page when filters change
   const handleFilterChange = () => {
     setCurrentPage(1);
+  };
+
+  // Handle edit note
+  const handleEditNote = (note) => {
+    console.log('[ExplorePage] handleEditNote called with note:', {
+      id: note.id,
+      title: note.title,
+      description: note.description,
+      category: note.category,
+      difficulty: note.difficulty,
+      ingredients: note.ingredients,
+      steps: note.steps
+    });
+    setEditingNote(note);
+    setIsModalOpen(true);
+  };
+
+  // Handle delete note
+  const handleDeleteNote = async (id) => {
+    if (confirm(t('messages.confirmDelete'))) {
+      try {
+        await deleteNote(id);
+      } catch (err) {
+        console.error('Error deleting note:', err);
+        alert('Không thể xóa công thức. Bạn cần đăng nhập hoặc không có quyền xóa công thức này.');
+      }
+    }
+  };
+
+  // Handle save note
+  const handleSaveNote = async (noteData) => {
+    if (editingNote) {
+      await updateNote(editingNote.id, noteData);
+    } else {
+      await addNote(noteData);
+    }
+    setIsModalOpen(false);
+    setEditingNote(null);
   };
 
   // Filter và sort notes
@@ -447,7 +488,7 @@ export default function ExplorePage() {
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {paginatedNotes.map((note) => (
-                  <NoteCard key={note.id} note={note} />
+                  <NoteCard key={note.id} note={note} onEdit={handleEditNote} onDelete={handleDeleteNote} />
                 ))}
               </div>
             ) : (
@@ -505,6 +546,18 @@ export default function ExplorePage() {
           </>
         )}
       </div>
+
+      {/* Note Modal for Edit */}
+      <NoteModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingNote(null);
+        }}
+        onSave={handleSaveNote}
+        note={editingNote}
+        title={editingNote ? t('noteModal.editTitle') : t('noteModal.addTitle')}
+      />
     </div>
   );
 }
